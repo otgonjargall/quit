@@ -14,42 +14,33 @@ type Usertype = {
 type Articlestype = {
   title: string,
   content: string,
-  summerize: string,
-  clerkid: string
+  // summerize: string,
+  clerk_id: string
 }
 export default function Home() {
   const { user, isLoaded } = useUser();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [summerize, setSummerize] = useState("")
+  const [summeriza, setSummeriza] = useState("")
 
+  // const saveUserToDB = async () => {
 
-  const saveUserToDB = async () => {
+  //   if (!isLoaded) return
+  //   if (!user || !user.primaryEmailAddress?.emailAddress) return;
+  //   console.log("hereglegch amjilttai nevtersen bn");
+  //   const userData: Usertype = {
+  //     clerkid: user.id,
+  //     email: user.primaryEmailAddress.emailAddress,
+  //     name: user.fullName,
+  //   };
 
-    if (!isLoaded) return
-    if (!user || !user.primaryEmailAddress?.emailAddress) return;
-    console.log("Clerk ачаалж байна эсвэл нэвтрээгүй байна...");
-    const email = user?.primaryEmailAddress?.emailAddress;
-    const clerkid = user?.id;
-    if (!user || !clerkid || !email) {
-      console.log("hereglegchiin data belen boloogvi bn...");
-      return;
-    }
-    const userData: Usertype = {
-      clerkid: user.id,
-      email: user.primaryEmailAddress.emailAddress,
-      name: user.fullName,
-    };
-
-    try {
-      const response = await axios.post("/api/users", userData);
-      // console.log("backendiin hariu:", response.data);
-    } catch (error) {
-      console.error("Дата хадгалахад алдаа гарлаа:", error);
-    }
-  };
-
-  saveUserToDB();
+  //   try {
+  //     const response = await axios.post("/api/users", userData);
+  //     console.log("backendiin hariu:", response.data);
+  //   } catch (error) {
+  //     console.error("Дата хадгалахад алдаа гарлаа:", error);
+  //   }
+  // };
 
   const handleArticles = async () => {
     if (!title || !content) return alert("hooson bain shvv")
@@ -57,11 +48,11 @@ export default function Home() {
       const articlesData: Articlestype = {
         title,
         content,
-        summerize,
-        clerkid: user?.id || "",
+        // summerize,
+        clerk_id: user?.id || "",
       }
       const response = await axios.post("/api/articles", articlesData)
-      setSummerize(response.data.Summary)
+      setSummeriza(response.data.Summary)
       console.log("amjilttai data irsen", response.data)
     } catch (error) { console.log("aldaa garlaa", error) }
 
@@ -78,6 +69,9 @@ export default function Home() {
         <input onChange={(e) => { setTitle(e.target.value) }} type="text" className="border w-full" value={title} placeholder="Enter a title for your article" />
         <p>Article Content</p>
         <textarea onChange={(e) => { setContent(e.target.value) }} name="" id="" className="w-full h-[120px] border" value={content} placeholder="Paste your article content here..."></textarea>
+        <div>
+
+        </div>
         <div className="flex justify-end w-[200px]">
           <button className="bg-black border rounded-2xl w-40 h-10 text-white" onClick={handleArticles}>generate summary</button>
         </div>
