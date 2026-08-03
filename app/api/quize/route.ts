@@ -12,7 +12,7 @@ export const quizJsonSchema = {
             items: {
                 type: "object",
                 properties: {
-                    question: { type: "string", description: "Asuultiin test" },
+                    question: { type: "string", description: "Quiz question text" },
                     options: {
                         type: "array",
                         items: { type: "string" },
@@ -34,12 +34,22 @@ export const quizJsonSchema = {
     required: ["questions"]
 } as const
 
-export const POST = async () => {
+export const POST = async (request: Request) => {
+    const body = await request.json();
+    const textContent = body.text
+
     const cleint = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINAI_KEY });
     const recipeSchema = z.fromJSONSchema(quizJsonSchema as any);
+    const prompt = `
+Танд дараах хураангуйлсан текст өгөгдсөн байна:
+"${textContent}"
+
+Дээрх АГУУЛГАД ҮНДЭСЛЭН хэрэглэгчийн мэдлэгийг шалгах 5 асуулттай квиз үүсгэж өгнө үү.
+Асуултууд болон сонголтуудыг ЗҮГЭЭР Л өгөгдсөн текстийн хүрээнд хийнэ үү. Текстээс гадуур асуулт асууж БОЛОХГҮЙ.
+`;
     const interaction = await cleint.interactions.create({
         model: "gemini-3.6-flash",
-        input: "General Knowledge сэдвээр 5 асуулттай квиз үүсгэж өгнө үү.",
+        input: prompt,
         response_format: {
             type: "text",
             mime_type: "application/json",
@@ -54,7 +64,7 @@ export const POST = async () => {
             data: recipe
         }, { status: 200 })
     }
-
+    return NextResponse.json({ message: "hariult oldsongvi" }, { status: 500 })
 }
 
 

@@ -3,12 +3,11 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import type { Metadata } from 'next'
-import { ClerkProvider, Show, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs'
+import { ClerkProvider, Show, SignInButton, SignUpButton, UserButton, } from '@clerk/nextjs'
 import './globals.css'
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarContent, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/ui/app-sidebar"
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -34,12 +33,14 @@ export default function RootLayout({
       lang="en"
       className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", inter.variable)}
     >
-
       <body className="min-h-full flex flex-col">
 
         <ClerkProvider>
+
           <header className="flex justify-end items-center p-4 gap-4 h-16">
+
             <Show when="signed-out">
+
               <SignInButton />
               <SignUpButton>
                 <button className="bg-purple-700 text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
@@ -48,13 +49,14 @@ export default function RootLayout({
               </SignUpButton>
             </Show>
             <Show when="signed-in">
+
               <UserButton />
             </Show>
           </header>
           <SidebarProvider>
             <AppSidebar />
+            <SidebarTrigger />
             <main>
-              <SidebarTrigger />
               {children}
             </main>
           </SidebarProvider>

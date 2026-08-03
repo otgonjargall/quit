@@ -1,7 +1,10 @@
 "use client"
+import { Button } from "@base-ui/react";
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
 import { Sparkles } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 type Usertype = {
   clerkid: string
@@ -22,7 +25,7 @@ export default function Home() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [summeriza, setSummeriza] = useState("")
-
+  const router = useRouter();
   // const saveUserToDB = async () => {
 
   //   if (!isLoaded) return
@@ -53,6 +56,7 @@ export default function Home() {
       }
       const response = await axios.post("/api/articles", articlesData)
       setSummeriza(response.data.Summary)
+      router.push(`/take?data=${encodeURIComponent(response.data.Summary)}`)
       console.log("amjilttai data irsen", response.data)
     } catch (error) { console.log("aldaa garlaa", error) }
 
@@ -70,13 +74,16 @@ export default function Home() {
         <p>Article Content</p>
         <textarea onChange={(e) => { setContent(e.target.value) }} name="" id="" className="w-full h-[120px] border" value={content} placeholder="Paste your article content here..."></textarea>
         <div>
-
         </div>
         <div className="flex justify-end w-[200px]">
-          <button className="bg-black border rounded-2xl w-40 h-10 text-white" onClick={handleArticles}>generate summary</button>
+
+          <Button className="bg-black border rounded-2xl w-40 h-10 hover:bg-gray-500 text-white" onClick={handleArticles}>generate summary</Button>
+
         </div>
       </div>
 
     </div>
+
   );
 }
+//  < Link href={`/take?data=${encodeURIComponent(summeriza)}`}></Link>
