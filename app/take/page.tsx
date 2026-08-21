@@ -2,9 +2,10 @@
 import { Button } from "@base-ui/react"
 import { BookOpen, Sparkles } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { Suspense } from "react";
 
-
-const TakeQuiz = () => {
+export const dynamic = 'force-dynamic';
+const TakeQuizContent = () => {
     const searchParams = useSearchParams()
     const data = searchParams.get("data")
     const router = useRouter()
@@ -30,4 +31,12 @@ const TakeQuiz = () => {
         </div>
     </div>
 }
+const TakeQuiz = () => {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <TakeQuizContent />
+        </Suspense>
+    )
+}
+
 export default TakeQuiz
