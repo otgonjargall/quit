@@ -64,23 +64,27 @@ export default function Home() {
   }
 
   return (
-    <div className="w-[856px] h-[442px] border py-4 px-6">
-      <div className="w-[800px] h-[400px] ">
-        <h3>Article Quize Generator</h3>
-        <Sparkles></Sparkles>
+    <div className="w-[628px] h-[442px] border py-4 px-6">
+      <div className=" w-[572px]h-[78px] ">
+        <div className="flex">
+          <Sparkles></Sparkles>
+          <h3>Article Quize Generator</h3>
+        </div>
+
         <p>Paste your article below to Generated a summarize and quiz question.Your articles will saved in the sidebar for future reference.</p>
-        <p>Article Title</p>
-        <input onChange={(e) => { setTitle(e.target.value) }} type="text" className="border w-full" value={title} placeholder="Enter a title for your article" />
-        <p>Article Content</p>
-        <textarea onChange={(e) => { setContent(e.target.value) }} name="" id="" className="w-full h-[120px] border" value={content} placeholder="Paste your article content here..."></textarea>
-        <div>
-        </div>
-        <div className="flex justify-end w-[200px]">
-
-          <Button className="bg-black border rounded-2xl w-40 h-10 hover:bg-gray-500 text-white" onClick={handleArticles}>generate summary</Button>
-
-        </div>
       </div>
+      <p>Article Title</p>
+      <input onChange={(e) => { setTitle(e.target.value) }} type="text" className="border w-[572px]" value={title} placeholder="Enter a title for your article" />
+      <p>Article Content</p>
+      <textarea onChange={(e) => { setContent(e.target.value) }} name="" id="" className="w-[572px] h-[120px] border" value={content} placeholder="Paste your article content here..."></textarea>
+      <div>
+      </div>
+      <div className="flex justify-end w-[200px]">
+
+        <Button className="bg-black border rounded-2xl w-40 h-10 hover:bg-gray-500 text-white" onClick={handleArticles}>generate summary</Button>
+
+      </div>
+
 
     </div>
 
