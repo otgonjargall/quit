@@ -26,7 +26,7 @@ export const quizJsonSchema = {
     },
   },
   required: ["questions"],
-} as const;
+} satisfies Parameters<typeof z.fromJSONSchema>[0];
 
 export const POST = async (request: Request) => {
   const body = await request.json();
@@ -49,9 +49,7 @@ export const POST = async (request: Request) => {
   }
 
   const client = new GoogleGenAI({ apiKey });
-  const recipeSchema = z.fromJSONSchema(
-    quizJsonSchema as Parameters<typeof z.fromJSONSchema>[0],
-  );
+  const recipeSchema = z.fromJSONSchema(quizJsonSchema);
   const prompt = `
 Танд дараах хураангуйлсан текст өгөгдсөн байна:
 "${textContent}"
