@@ -41,14 +41,15 @@ export default function RootLayout({
           inter.variable
         )}
       >
-        <body className="min-h-full flex flex-col">
-          {/* Header component-ийг шууд ашиглана */}
+        <body className="flex min-h-screen flex-col">
           <Header />
 
-          <SidebarProvider>
+          <SidebarProvider defaultOpen={false} className="min-h-0 flex-1">
             <AppSidebar />
-            <SidebarTrigger />
-            <main>{children}</main>
+            <main className="relative flex min-w-0 flex-1 flex-col">
+              <SidebarTrigger className="absolute left-2 top-2 z-10 size-6" />
+              {children}
+            </main>
           </SidebarProvider>
         </body>
       </html>

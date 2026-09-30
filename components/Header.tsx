@@ -7,16 +7,18 @@ export default function Header() {
 
 
     if (!isLoaded) {
-        return <header className="h-16" />;
+        return <header className="h-10 border-b" />;
     }
 
     return (
-        <header className="flex justify-end items-center p-4 gap-4 h-16">
+        <header className="flex h-10 items-center justify-between border-b bg-background px-4">
+            <span className="text-sm font-semibold">Quiz app</span>
+            <div className="flex items-center gap-2">
             {!isSignedIn ? (
                 <>
                     <SignInButton />
                     <SignUpButton>
-                        <button className="bg-purple-700 text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
+                        <button className="cursor-pointer rounded-sm bg-primary px-2.5 py-1 text-xs font-medium text-primary-foreground">
                             Sign Up
                         </button>
                     </SignUpButton>
@@ -24,6 +26,7 @@ export default function Header() {
             ) : (
                 <UserButton />
             )}
+            </div>
         </header>
     );
 }

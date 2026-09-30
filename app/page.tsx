@@ -3,91 +3,97 @@ import { Button } from "@base-ui/react";
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
 import { Sparkles } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-type Usertype = {
-  clerkid: string
-
-  email: string | undefined
-
-  name: string | null;
-
-};
+import { useState } from "react";
 type Articlestype = {
   title: string,
   content: string,
-  // summerize: string,
   clerk_id: string
 }
 export default function Home() {
-  const { user, isLoaded } = useUser();
+  const { user } = useUser();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [summeriza, setSummeriza] = useState("")
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
-  // const saveUserToDB = async () => {
-
-  //   if (!isLoaded) return
-  //   if (!user || !user.primaryEmailAddress?.emailAddress) return;
-  //   console.log("hereglegch amjilttai nevtersen bn");
-  //   const userData: Usertype = {
-  //     clerkid: user.id,
-  //     email: user.primaryEmailAddress.emailAddress,
-  //     name: user.fullName,
-  //   };
-
-  //   try {
-  //     const response = await axios.post("/api/users", userData);
-  //     console.log("backendiin hariu:", response.data);
-  //   } catch (error) {
-  //     console.error("Дата хадгалахад алдаа гарлаа:", error);
-  //   }
-  // };
+  
 
   const handleArticles = async () => {
     if (!title || !content) return alert("hooson bain shvv")
+    setIsSubmitting(true)
     try {
       const articlesData: Articlestype = {
         title,
         content,
-        // summerize,
         clerk_id: user?.id || "",
       }
       const response = await axios.post("/api/articles", articlesData)
-      setSummeriza(response.data.Summary)
-      router.push(`/take?data=${encodeURIComponent(response.data.Summary)}`)
+      const summary = response.data.Summary || response.data.data?.summery || response.data.summery || ""
+      if (summary) {
+        const articleId = response.data.data?.id
+        router.push(`/take?title=${encodeURIComponent(title)}&id=${encodeURIComponent(String(articleId || ""))}&data=${encodeURIComponent(summary)}`)
+      } else {
+        alert("Хураангуй үүсгэхэд алдаа гарлаа")
+      }
       console.log("amjilttai data irsen", response.data)
-    } catch (error) { console.log("aldaa garlaa", error) }
+    } catch (error) {
+      const message = axios.isAxiosError(error)
+        ? error.response?.data?.message || error.response?.data?.error
+        : null
+      alert(message || "Хураангуй үүсгэхэд алдаа гарлаа")
+    } finally {
+      setIsSubmitting(false)
+    }
 
 
   }
 
   return (
-    <div className="w-[628px] h-[442px] border py-4 px-6">
-      <div className=" w-[572px]h-[78px] ">
-        <div className="flex">
-          <Sparkles></Sparkles>
-          <h3>Article Quize Generator</h3>
+    <div className="flex min-h-[calc(100vh-2.25rem)] items-start justify-center bg-muted/30 px-4 py-8 sm:px-8">
+      <section className="w-full max-w-157 rounded-md border bg-background px-4 py-4 shadow-sm sm:px-6">
+        <div className="mb-4">
+          <div className="mb-1 flex items-center gap-1.5">
+            <Sparkles className="size-4" />
+            <h3 className="text-sm font-semibold">Article Quiz Generator</h3>
+          </div>
+
+          <p className="text-[11px] leading-4 text-muted-foreground">
+            Paste your article below to generate a summary and quiz questions. Your articles will be saved in the sidebar for future reference.
+          </p>
         </div>
 
-        <p>Paste your article below to Generated a summarize and quiz question.Your articles will saved in the sidebar for future reference.</p>
-      </div>
-      <p>Article Title</p>
-      <input onChange={(e) => { setTitle(e.target.value) }} type="text" className="border w-[572px]" value={title} placeholder="Enter a title for your article" />
-      <p>Article Content</p>
-      <textarea onChange={(e) => { setContent(e.target.value) }} name="" id="" className="w-[572px] h-[120px] border" value={content} placeholder="Paste your article content here..."></textarea>
-      <div>
-      </div>
-      <div className="flex justify-end w-[200px]">
+        <div className="space-y-3">
+          <div>
+            <label htmlFor="article-title" className="mb-1 block text-[11px] font-medium">Article Title</label>
+            <input
+              id="article-title"
+              onChange={(e) => setTitle(e.target.value)}
+              type="text"
+              className="h-8 w-full rounded-sm border px-2 text-xs outline-none placeholder:text-muted-foreground focus:ring-1 focus:ring-ring"
+              value={title}
+              placeholder="Enter a title for your article..."
+            />
+          </div>
 
-        <Button className="bg-black border rounded-2xl w-40 h-10 hover:bg-gray-500 text-white" onClick={handleArticles}>generate summary</Button>
+          <div>
+            <label htmlFor="article-content" className="mb-1 block text-[11px] font-medium">Article Content</label>
+            <textarea
+              id="article-content"
+              onChange={(e) => setContent(e.target.value)}
+              className="min-h-28 w-full resize-y rounded-sm border p-2 text-xs outline-none placeholder:text-muted-foreground focus:ring-1 focus:ring-ring"
+              value={content}
+              placeholder="Paste your article content here..."
+            />
+          </div>
+        </div>
 
-      </div>
-
-
+        <div className="mt-2 flex justify-end">
+          <Button disabled={isSubmitting} className="h-8 rounded-sm bg-primary px-3 text-[10px] text-primary-foreground hover:bg-primary/80" onClick={handleArticles}>
+            {isSubmitting ? "Generating..." : "Generate summary"}
+          </Button>
+        </div>
+      </section>
     </div>
 
   );
 }
-//  < Link href={`/take?data=${encodeURIComponent(summeriza)}`}></Link>
