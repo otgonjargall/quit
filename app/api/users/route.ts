@@ -8,7 +8,7 @@ export const POST = async (request: Request) => {
   try {
     const body = await request.json();
     console.log("Бэкенд дээр ирсэн body:", body);
-    const { email, name, clerkid, createdat, updatedat } = body;
+    const { email, name, clerkid } = body;
     if (!clerkid || !email) {
       return NextResponse.json(
         {
